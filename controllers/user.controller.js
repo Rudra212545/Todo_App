@@ -20,10 +20,10 @@ const generateToken = (user) => {
 
 // Register User Controller
 export const registerUser = async (req, res) => {
-    // 🔍 Debug logs - add these temporarily
-    console.log('Content-Type:', req.headers['content-type']);
-    console.log('req.body:', req.body);
-    console.log('req.body type:', typeof req.body);
+    // // 🔍 Debug logs - add these temporarily
+    // console.log('Content-Type:', req.headers['content-type']);
+    // console.log('req.body:', req.body);
+    // console.log('req.body type:', typeof req.body);
     try {
         const { username, email, password } = req.body;
         console.log('Extracted:', { username, email, password });
@@ -121,6 +121,40 @@ export const registerUser = async (req, res) => {
     }
 };
 
+// Login User Controller 
+export const loginUser = async (req,res)=>{
+    try {
+        
+        const {email, password} = req.body;
+
+        // Find the user 
+        const user = await User.findOne({email});
+        if(!user){
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+           // Verify password
+           const isValidPassword = await bcrypt.compare(password, user.password);
+           if (!isValidPassword) {
+               return res.status(401).json({ message: 'Invalid credentials' });
+           }
+
+        // Generate JWT token with user data
+        const token = generateToken(user);
+        
+        res.json({
+            message:"Login Successful",
+            token,
+            user:{
+                username:user.username,
+                email:user.email
+            }
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
 
 
 
