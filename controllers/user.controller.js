@@ -6,7 +6,6 @@ import User from '../models/user.model.js';
 // Generate JWT Token with email and username in payload
 const generateToken = (user) => {
     const payload = {
-        userId: user._id,
         email: user.email,
         username: user.username
     };
@@ -19,12 +18,15 @@ const generateToken = (user) => {
 };
 
 
-// Register User Controller 
-
 // Register User Controller
 export const registerUser = async (req, res) => {
+    // 🔍 Debug logs - add these temporarily
+    console.log('Content-Type:', req.headers['content-type']);
+    console.log('req.body:', req.body);
+    console.log('req.body type:', typeof req.body);
     try {
         const { username, email, password } = req.body;
+        console.log('Extracted:', { username, email, password });
 
         // Input validation
         if (!username || !email || !password) {
