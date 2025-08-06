@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         
     },
-    task: {
+    tasks: {
         type: mongoose.Types.ObjectId,
         ref: "Task"
     }

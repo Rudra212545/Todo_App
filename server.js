@@ -1,7 +1,9 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import userRoutes from "./routes/user.routes.js"
+import taskRoutes from "./routes/task.route.js";
 
 // Dotenv
 dotenv.config();
@@ -11,13 +13,14 @@ const app = express();
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());                       
+app.use(cookieParser());
 
-// Add a middleware to log all requests
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  console.log('Headers:', req.headers);
-  next();
-});
+// // Add a middleware to log all requests
+// app.use((req, res, next) => {
+//   console.log(`${req.method} ${req.url}`);
+//   console.log('Headers:', req.headers);
+//   next();
+// });
 
 
 // Database connection
@@ -35,6 +38,7 @@ connectDB();
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/tasks',taskRoutes);
 
 
 app.listen(process.env.PORT, () => {
